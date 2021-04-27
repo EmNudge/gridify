@@ -1,0 +1,21 @@
+input,
+button {
+	font-size: inherit;
+	font-family: inherit;
+}
+
+button, select {
+  color: #333;
+  background-color: #f4f4f4;
+  outline: none;
+  padding: 0.2em 0.8em;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+button:hover {
+  cursor: pointer;
+}
+button:active {
+  background-color: #fff;
+}
