@@ -5,7 +5,7 @@
 
 <section>
   <svg width="512px" height="512px">
-    <GridRectNode gridRectNode={$gridRectNodeStore} domain={[0,0,100,100]} />
+    <GridRectNode gridRectNode={gridRectNodeStore} domain={[0,0,100,100]} />
   </svg>
 </section>
 

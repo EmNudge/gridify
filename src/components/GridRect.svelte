@@ -1,30 +1,32 @@
 <script lang="ts">
   import type { Writable } from 'svelte/store';
   import type { Domain, Box, RectHolder, Rect } from '../stores';
-  import { gridRectToSplitStoreStore } from '../stores';
+  import { gridRectToSplitStoreStore, gridRectContextStoreStore } from '../stores';
   import GridRectNode from './GridRectNode.svelte';
   
   export let gridRect: Writable<Box>;
+  export let gridRectContext: Writable<RectHolder>;
   export let domain: Domain;
 
-  let rectHolder: RectHolder = null;
-  $: rectHolder = Boolean(($gridRect as RectHolder).boxes)
-    ? ($gridRect as RectHolder)
+  let rectHolderStore: Writable<RectHolder> = null;
+  $: rectHolderStore = Boolean(($gridRect as RectHolder).boxes)
+    ? (gridRect as Writable<RectHolder>)
     : null;
 
   $: isSelected = $gridRectToSplitStoreStore == gridRect;
 
-  function performSplit() {
+  function addToSplit() {
     gridRectToSplitStoreStore.set(gridRect as Writable<Rect>);
+    gridRectContextStoreStore.set(gridRectContext);
   }
 </script>
 
-{#if rectHolder}
-  <GridRectNode gridRectNode={rectHolder} {domain} />
+{#if rectHolderStore}
+  <GridRectNode gridRectNode={rectHolderStore} {domain} />
 {:else}
   <rect 
     class:isSelected
-    on:click={performSplit}
+    on:click={addToSplit}
     x="{domain[0]}%" 
     y="{domain[1]}%" 
     width="{domain[2]}%" 

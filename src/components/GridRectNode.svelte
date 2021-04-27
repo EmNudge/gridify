@@ -1,14 +1,20 @@
 <script lang="ts">
   import type { RectHolder, Domain } from '../stores';
+	import type { Writable } from 'svelte/store';
 	import { getDomainsFromBoxStores } from '../utils/getDomains'
 	import GridRect from './GridRect.svelte';
 
-	export let gridRectNode: RectHolder;
+	export let gridRectNode: Writable<RectHolder> | null;
 	export let domain: Domain;
 	
-	const domains = getDomainsFromBoxStores(gridRectNode.boxes, domain, gridRectNode.splitType);
+	$: domains = getDomainsFromBoxStores($gridRectNode.boxes, domain, $gridRectNode.splitType);
 </script>
 
-{#each domains as domain, i}
-	<GridRect gridRect={gridRectNode.boxes[i]} {domain} />
-{/each}
+<g>
+	{#each domains as domain, i}
+		<GridRect 
+			gridRect={$gridRectNode.boxes[i]} 
+			gridRectContext={gridRectNode} 
+			{domain} />
+	{/each}
+</g>
