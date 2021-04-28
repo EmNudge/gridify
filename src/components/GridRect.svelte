@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { Writable } from 'svelte/store';
-  import type { Domain, Box, RectHolder, Rect } from '../stores';
-  import { gridRectToSplitStoreStore, gridRectContextStoreStore } from '../stores';
+  import type { Domain, Box, RectHolder, Rect } from '../stores/index';
+  
+  import { get } from 'svelte/store';
+  import { toSplitRectsStore } from '../stores/index';
   import GridRectNode from './GridRectNode.svelte';
   
   export let gridRect: Writable<Box>;
@@ -13,11 +15,21 @@
     ? (gridRect as Writable<RectHolder>)
     : null;
 
-  $: isSelected = $gridRectToSplitStoreStore == gridRect;
+  $: isSelected = $toSplitRectsStore.includes(gridRect as Writable<Rect>);
 
-  function addToSplit() {
-    gridRectToSplitStoreStore.set(gridRect as Writable<Rect>);
-    gridRectContextStoreStore.set(gridRectContext);
+  function addToSplit(e: MouseEvent) {
+    const rectParent = get(gridRect as Writable<Rect>).parent;
+
+      rectParent.update(oldParentStore => {
+      // if shift key wasn't pressed or parents don't match
+      if (!e.shiftKey || oldParentStore !== get(gridRectContext)) {
+        toSplitRectsStore.set([gridRect as Writable<Rect>]);
+        return get(gridRectContext);
+      }
+
+      toSplitRectsStore.update(gridStoreList => [...gridStoreList, gridRect as Writable<Rect>]);
+      return get(gridRectContext);
+    });
   }
 </script>
 

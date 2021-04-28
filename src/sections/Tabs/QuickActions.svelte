@@ -1,29 +1,37 @@
-<script>
+<script lang="ts">
+  import type { Writable } from 'svelte/store';
+  import { get } from 'svelte/store';
+  
+  import type { Box } from '../../stores/index';
+  import { 
+    Split,
+    toSplitRectsStore,  
+    splitDivisionsStore,
+  } from '../../stores/index';
+
   import { 
     restart, 
-    getBox,
-    Split,
-    gridRectToSplitStoreStore,  
-    gridSplitStore,
-  } from '../../stores';
+    getRectHolder,
+  } from '../../stores/utils';
   
-  $: gridRectToSplit = $gridRectToSplitStoreStore;
+  let gridRectToSplit: Writable<Box>; 
+  $: gridRectToSplit = $toSplitRectsStore[0];
   function verticalSplit() {
-    gridRectToSplit.update(({ fractionalSize }) => getBox(
+    gridRectToSplit.update(({ fractionalSize }) => get(getRectHolder(
       Split.VERTICAL, 
       fractionalSize,
-      $gridSplitStore,
-    )); 
+      $splitDivisionsStore,
+    ))); 
   }
   function horizontalSplit() {
-    gridRectToSplit.update(({ fractionalSize }) => getBox(
+    gridRectToSplit.update(({ fractionalSize }) => get(getRectHolder(
       Split.HORIZONTAL, 
       fractionalSize,
-      $gridSplitStore,
-    )); 
+      $splitDivisionsStore,
+    ))); 
   }
   function deselect() {
-    gridRectToSplitStoreStore.set(null);
+    toSplitRectsStore.set(null);
   }
 </script>
 

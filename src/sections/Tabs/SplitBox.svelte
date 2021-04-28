@@ -1,26 +1,28 @@
 <script lang="ts">
 	import { 
+		splitTypeStore,
+		splitDivisionsStore 
+	} from '../../stores/index';
+	import {
 		splitCurrentRect, 
-		gridTypeStore,
-		gridSplitStore 
-	} from '../../stores';
+	} from '../../stores/utils';
 	
-	let divisions = $gridSplitStore.length;
+	let divisions = $splitDivisionsStore.length;
 	$: ((divisions) => {
-		if (divisions < $gridSplitStore.length) {
-			$gridSplitStore = $gridSplitStore.slice(0, divisions);
+		if (divisions < $splitDivisionsStore.length) {
+			$splitDivisionsStore = $splitDivisionsStore.slice(0, divisions);
 			return;
 		}
 
-		const diff = divisions - $gridSplitStore.length;
-		$gridSplitStore = [...$gridSplitStore, ...Array(diff).fill(1)];
+		const diff = divisions - $splitDivisionsStore.length;
+		$splitDivisionsStore = [...$splitDivisionsStore, ...Array(diff).fill(1)];
 	})(divisions);
 
 	type CustomInputEvent = Event & { currentTarget: EventTarget & HTMLInputElement };
 	const handleSplitChange = (i: number) => (e: CustomInputEvent) => {
-		const nums = $gridSplitStore;
+		const nums = $splitDivisionsStore;
 		const newNum = Number((e.target as HTMLInputElement).value);
-		$gridSplitStore = [
+		$splitDivisionsStore = [
 			...nums.slice(0, i), 
 			newNum, 
 			...nums.slice(i+1)
@@ -33,7 +35,7 @@
 		<div>
 			<label for="#">Mode</label>
 			<br>
-			<select bind:value={$gridTypeStore}>
+			<select bind:value={$splitTypeStore}>
 				<option value="vertical">Vertical</option>
 				<option value="horizontal">Horizontal</option>
 			</select>
@@ -45,7 +47,7 @@
 		</div>
 		<div>
 			<label for="#">Fractional Units</label>
-			{#each $gridSplitStore as num, i}
+			{#each $splitDivisionsStore as num, i}
 				<input 
 					type="number" 
 					min="1" 

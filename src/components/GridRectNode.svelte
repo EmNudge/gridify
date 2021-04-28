@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { RectHolder, Domain } from '../stores';
+  import type { RectHolder, Domain } from '../stores/index';
 	import type { Writable } from 'svelte/store';
+
 	import { getDomainsFromBoxStores } from '../utils/getDomains'
 	import GridRect from './GridRect.svelte';
 
