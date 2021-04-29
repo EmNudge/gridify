@@ -4,10 +4,9 @@
   
   import { get } from 'svelte/store';
   import { toSplitRectsStore } from '../stores/index';
-  import GridRectNode from './GridRectNode.svelte';
+  import { getDomainsFromBoxStores } from '../utils/getDomains'
   
   export let gridRect: Writable<Box>;
-  export let gridRectContext: Writable<RectHolder>;
   export let domain: Domain;
 
   let rectHolderStore: Writable<RectHolder> = null;
@@ -15,26 +14,37 @@
     ? (gridRect as Writable<RectHolder>)
     : null;
 
+  let domains: Domain[];
+  $: domains = rectHolderStore 
+    ? getDomainsFromBoxStores($rectHolderStore.boxes, domain, $rectHolderStore.splitType)
+    : []; 
+
   $: isSelected = $toSplitRectsStore.includes(gridRect as Writable<Rect>);
 
   function addToSplit(e: MouseEvent) {
     const rectParent = get(gridRect as Writable<Rect>).parent;
 
-      rectParent.update(oldParentStore => {
+    rectParent.update(oldParentStore => {
       // if shift key wasn't pressed or parents don't match
-      if (!e.shiftKey || oldParentStore !== get(gridRectContext)) {
+      if (!e.shiftKey) {
         toSplitRectsStore.set([gridRect as Writable<Rect>]);
-        return get(gridRectContext);
+        return oldParentStore;
       }
 
       toSplitRectsStore.update(gridStoreList => [...gridStoreList, gridRect as Writable<Rect>]);
-      return get(gridRectContext);
+      return oldParentStore;
     });
   }
 </script>
 
 {#if rectHolderStore}
-  <GridRectNode gridRectNode={rectHolderStore} {domain} />
+  <g>
+    {#each domains as domain, i}
+      <svelte:self 
+        gridRect={$rectHolderStore.boxes[i]}
+        {domain} />
+    {/each}
+  </g>
 {:else}
   <rect 
     class:isSelected
