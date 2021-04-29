@@ -31,7 +31,7 @@
     ))); 
   }
   function deselect() {
-    toSplitRectsStore.set(null);
+    toSplitRectsStore.set([]);
   }
 </script>
 

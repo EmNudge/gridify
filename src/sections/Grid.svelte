@@ -1,11 +1,11 @@
 <script>
-  import GridRectNode from '../components/GridRectNode.svelte';
+  import GridRect from '../components/GridRect.svelte';
   import { rootRectStore } from '../stores/index';
 </script>
 
 <section>
   <svg width="512px" height="512px">
-    <GridRectNode gridRectNode={$rootRectStore} domain={[0,0,100,100]} />
+    <GridRect gridRect={$rootRectStore} domain={[0,0,100,100]} />
   </svg>
 </section>
 

@@ -13,11 +13,10 @@
   $: rectHolderStore = Boolean(($gridRect as RectHolder).boxes)
     ? (gridRect as Writable<RectHolder>)
     : null;
-
   let domains: Domain[];
   $: domains = rectHolderStore 
     ? getDomainsFromBoxStores($rectHolderStore.boxes, domain, $rectHolderStore.splitType)
-    : []; 
+    : [];
 
   $: isSelected = $toSplitRectsStore.includes(gridRect as Writable<Rect>);
 
